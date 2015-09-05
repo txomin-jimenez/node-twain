@@ -1,6 +1,6 @@
 TablesSoup = require '../../storage/soups/tables-soup'
 
-cmwTwainCmd = "C:\\CmTwain\\CmdTwain.exe"
+cmwTwainCmd = "C:\\CmdTwain\\CmdTwain.exe"
 
 module.exports =
 
