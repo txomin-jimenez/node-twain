@@ -12,4 +12,4 @@
       .panel-footer
         .row
           .col-xs-6.col-xs-offset-6
-            button#saveButton.btn.btn-primary.btn-lg.btn-block(type='button') {{i18n_ 'c' 'Scan!'}}
+            button#scanButton.btn.btn-primary.btn-lg.btn-block(type='button') {{i18n_ 'c' 'Scan!'}}

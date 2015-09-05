@@ -1,9 +1,9 @@
-cmwTwainCmd = "C:\\CmTwain\\CmdTwain.exe"
+
 
 module.exports =
 
-  scan: (outputFile)->
+  scan: ->
 
-    child_process = require('child_process')
+    $.get "/api/scan", ->
+      alert "ok"
 
-    child_process.execSync("#{cmwTwainCmd} #{outputFile}")

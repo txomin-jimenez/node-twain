@@ -1,5 +1,7 @@
 TablesSoup = require '../../storage/soups/tables-soup'
 
+cmwTwainCmd = "C:\\CmTwain\\CmdTwain.exe"
+
 module.exports =
 
   index: (req, res) ->
@@ -12,6 +14,13 @@ module.exports =
 
 
   scan: (req,res) ->
+
+    outputFile = "Z:\\scanner\\scan1.jpg"
+
+    child_process = require('child_process')
+
+    child_process.execSync("#{cmwTwainCmd} #{outputFile}")
+
     res.json {ok: true}
 
 

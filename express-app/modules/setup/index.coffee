@@ -10,4 +10,4 @@ module.exports = (app) ->
 
   # comprobar en todas las llamadas si la configuracion es correcta
   # en caso contrario no continuar
-  app.all '/api/*', handlers.check
+  # app.all '/api/*', handlers.check
