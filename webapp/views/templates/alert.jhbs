@@ -1,0 +1,5 @@
+.alert.alert-dismissible(role="alert", class="alert-{{level}}")
+  button(type="button", class="close", data-dismiss="alert", aria-label="Close")
+    span(aria-hidden="true")&times;
+  strong {{title}}
+  |  {{message}}

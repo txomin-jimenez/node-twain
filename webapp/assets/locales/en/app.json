@@ -1,0 +1,23 @@
+{
+  "alias": "alias",
+  "back": "back",
+  "by_alias": "by alias",
+  "by_name": "by name",
+  "cancel": "cancel",
+  "delete": "delete",
+  "delete_confirm_msg": "Are you sure you want to delete '__itemDesc__'?",
+  "deprecated": "deprecated",
+  "home": "home",
+  "mandatory": "mandatory",
+  "name": "name",
+  "no_data_found": "no data found",
+  "on_save_error": "error on save __itemDesc__",
+  "on_delete_error": "error on delete __itemDesc__",
+  "options": "options",
+  "order_action": "order",
+  "properties": "properties",
+  "read_only": "read only",
+  "save": "save",
+  "search_by_term": "search by __term__",
+  "setup": "setup"
+}

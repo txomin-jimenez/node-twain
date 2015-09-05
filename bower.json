@@ -1,0 +1,65 @@
+{
+  "name": "node-twain",
+  "version": "0.1.0",
+  "description": "Node.js based web scanner service",
+  "keywords": [
+    "brunch",
+    "express",
+    "backbone",
+    "chaplin"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "chaplin": "~1.0.0",
+    "console-polyfill": "~0.1.0",
+    "lodash": "~2.4.0",
+    "jquery": "~2.0.2",
+    "normalize-css": "~2.1.2",
+    "h5bp-helpers": "~0.1.0",
+    "bootstrap": "~3.3.2",
+    "font-awesome": "~4.3.0",
+    "backbone.stickit": "~0.8.0",
+    "q": "~1.1.2",
+    "fastclick": "~1.0.6",
+    "noty": "~2.3.4",
+    "animate.css": "~3.2.1",
+    "interact": "~1.2.3",
+    "moment": "~2.9.0",
+    "i18next": "~1.8.2",
+    "numeral": "~1.5.3"
+  },
+  "overrides": {
+    "backbone": {
+      "dependencies": {
+        "lodash": "*",
+        "jquery": "*"
+      },
+      "main": "backbone.js"
+    },
+    "font-awesome": {
+      "main": [
+        "fonts/FontAwesome.otf",
+        "fonts/fontawesome-webfont.eot",
+        "fonts/fontawesome-webfont.svg",
+        "fonts/fontawesome-webfont.ttf",
+        "fonts/fontawesome-webfont.woff",
+        "fonts/fontawesome-webfont.woff2",
+        "css/font-awesome.css"
+      ]
+    },
+    "backbone.stickit": {
+      "main": "backbone.stickit.js"
+    },
+    "q": {
+      "main": "q.js"
+    }
+
+  }
+}

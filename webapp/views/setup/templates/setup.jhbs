@@ -1,0 +1,19 @@
+.page-title
+  h4{{i18n_ 'c' 'setup:editor_setup'}}
+
+.row
+  .col-md-8.col-md-offset-2
+    .panel.panel-default
+      //- .panel-heading
+      .panel-body
+        .form-horizontal
+          .form-group
+            label.col-sm-4.control-label(for='baseRepoPath') {{i18n_ 'c' 'setup:base_files_repo_path'}}
+            .col-sm-8
+              input#baseRepoPath.form-control(type='text', placeholder='path', value='{{base_repo_path}}', data-attr='base_repo_path')
+
+      .panel-footer
+        .row
+          .col-xs-12
+            .pull-right
+              button#saveButton.btn.btn-primary(type='button') {{i18n_ 'c' 'save'}}
