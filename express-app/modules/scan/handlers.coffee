@@ -15,7 +15,7 @@ module.exports =
 
   scan: (req,res) ->
 
-    outputFile = "Z:\\scanner\\scan1.jpg"
+    outputFile = "Z:\\scanner\\scan_#{new Date().toISOString().replace('T', '_').replace(/[:,-]/g,'').substr(0, 15)}.jpg"
 
     child_process = require('child_process')
 
