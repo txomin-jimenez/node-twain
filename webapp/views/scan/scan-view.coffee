@@ -11,8 +11,6 @@ module.exports = class ScanView extends View
 
   events:
     'click #scanButton': 'scan'
-  #   'click .order-by-name': 'orderByName'
-  #   'click .order-by-alias': 'orderByAlias'
 
   render: ->
 
@@ -20,4 +18,29 @@ module.exports = class ScanView extends View
 
   scan: ->
 
-    Scanner.scan()
+    options = {}
+
+    Scanner.preview()
+    .then (previewImage) =>
+
+      @showPreview(previewImage)
+
+      Scanner.scan()
+    .then =>
+      @publishEvent "!application:showAlert",
+        type: 'information'
+        text: 'Image scanned successfully!'
+
+    .catch (err) =>
+      console.error err
+      @publishEvent "!application:showAlert",
+        type: 'error'
+        text: err
+
+  showPreview: (scannedImageRes) =>
+    @$('img.scanned-img').attr 'src', scannedImageRes
+
+  saveImage: (scannedImage) =>
+
+    # window.open scannedImage, '_blank'
+    window.location.assign scannedImage

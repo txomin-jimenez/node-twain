@@ -1,23 +1,6 @@
 {
-  "alias": "alias",
-  "back": "atrás",
-  "by_alias": "por alias",
-  "by_name": "por nombre",
-  "cancel": "cancelar",
-  "delete": "eliminar",
-  "delete_confirm_msg": "¿Estas seguro que deseas eliminar '__itemDesc__'?",
-  "deprecated": "deprecado",
-  "home": "inicio",
-  "mandatory": "obligatorio",
-  "name": "nombre",
-  "no_data_found": "no se han encontrado datos",
-  "on_save_error": "error al guardar __itemDesc__",
-  "on_delete_error": "error al eliminar __itemDesc__",
-  "options": "opciones",
-  "order_action": "ordenar",
-  "properties": "propiedades",
-  "read_only": "sólo lectura",
-  "save": "guardar",
-  "search_by_term": "buscar por __term__",
-  "setup": "configuración"
+  "image_preview": "previsualización",
+  "file_name": "nombre del fichero",
+  "setup": "configuración",
+  "scan_and_save": "¡Escanear y Guardar!"
 }

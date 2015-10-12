@@ -1,15 +1,32 @@
+.row.scan-actions
+  .col-md-8.col-md-offset-2
+    .row
+      .col-md-8
+        .form-horizontal
+          .form-group
+            label.col-sm-4.control-label(for='baseRepoPath') {{i18n_ 'c' 'file_name'}}
+            .col-sm-8
+              input#filename.form-control(type='text', placeholder='file name for save', value='filename.jpg')
+      .col-md-4
+        button#scanButton.btn.btn-primary.btn-lg.btn-block(type='button') {{i18n_ 'c' 'scan_and_save'}}
 .row
   .col-md-8.col-md-offset-2
     .panel.panel-default
-      //- .panel-heading
+      .panel-heading.text-center {{i18n_ 'c' 'image_preview'}}
       .panel-body
-        //- .form-horizontal
-        //-   .form-group
-        //-     label.col-sm-4.control-label(for='baseRepoPath') {{i18n_ 'c' 'scan_output_path'}}
-        //-     .col-sm-8
-        //-       input#baseRepoPath.form-control(type='text', placeholder='path', value='{{base_repo_path}}', data-attr='base_repo_path')
+        img.scanned-img
 
-      .panel-footer
-        .row
-          .col-xs-6.col-xs-offset-6
-            button#scanButton.btn.btn-primary.btn-lg.btn-block(type='button') {{i18n_ 'c' 'Scan!'}}
+  //- .panel.panel-default
+  //-   .panel-body
+      .form-horizontal
+        .form-group
+          label.col-sm-4.control-label(for='baseRepoPath') {{i18n_ 'c' 'name'}}
+          .col-sm-8
+            input#filename.form-control(type='text', placeholder='file name for save', value='filename.jpg')
+  //-   .panel-footer
+  //-     .row
+  //-       .col-xs-6.col-xs-offset-6
+  //-         button#scanButton.btn.btn-primary.btn-lg.btn-block(type='button') {{i18n_ 'c' 'Scan!'}}
+
+
+

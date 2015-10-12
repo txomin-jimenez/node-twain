@@ -1,20 +1,43 @@
-TablesSoup = require '../../storage/soups/tables-soup'
+fileSystem = require('fs')
+path    = require('path')
+util              = require('util')
 
-cmwTwainCmd = "C:\\CmdTwain\\CmdTwain.exe"
+cmdTwainCmd = "C:\\CmdTwain\\CmdTwain.exe"
+cmdTwainPreviewOpts = "/PAPER=A4 /RGB /DPI=30 /JPG25"
+cmdTwainTmpDir = "C:\\temp"
 
 module.exports =
 
-  index: (req, res) ->
+  # index: (req, res) ->
 
-    soup = new TablesSoup
+  #   soup = new TablesSoup
 
-    soup.list()
-    .then (tables) ->
-      res.send tables
+  #   soup.list()
+  #   .then (tables) ->
+  #     res.send tables
 
+  preview: (req,res) ->
+
+    tmpFileName = "preview_#{new Date().toISOString().replace('T', '_').replace(/[:,-]/g,'').substr(0, 15)}.jpg"
+    tmpFilePath = path.join(cmdTwainTmpDir,tmpFileName)
+
+    child_process = require('child_process')
+
+    child_process.execSync("#{cmwTwainCmd} #{cmdTwainPreviewOpts} #{tmpFilePath}")
+
+    stat = fileSystem.statSync(tmpFilePath);
+
+    res.writeHead 200,
+        'Content-Type': 'image/jpg',
+        'Content-Length': stat.size
+
+    readStream = fileSystem.createReadStream(tmpFilePath);
+
+    util.pump(readStream, res);
 
   scan: (req,res) ->
 
+    ###
     outputFile = "Z:\\scanner\\scan_#{new Date().toISOString().replace('T', '_').replace(/[:,-]/g,'').substr(0, 15)}.jpg"
 
     child_process = require('child_process')
@@ -22,7 +45,28 @@ module.exports =
     child_process.execSync("#{cmwTwainCmd} #{outputFile}")
 
     res.json {ok: true}
+    ###
 
+    options = req.body
+
+    tmpFileName = "scan_#{new Date().toISOString().replace('T', '_').replace(/[:,-]/g,'').substr(0, 15)}.jpg"
+    tmpFilePath = path.join(cmdTwainTmpDir,tmpFileName)
+
+    child_process = require('child_process')
+
+    child_process.execSync("#{cmwTwainCmd} #{tmpFilePath}")
+
+    stat = fileSystem.statSync(tmpFilePath);
+    outputFileName = options.fileName or tmpFileName
+
+    res.writeHead 200,
+        'Content-Type': 'image/jpg',
+        'Content-Length': stat.size
+        'Content-Disposition': "attachment; filename=\"#{outputFileName}\";"
+
+    readStream = fileSystem.createReadStream(tmpFilePath);
+
+    util.pump(readStream, res);
 
   # put: (req, res) ->
 
