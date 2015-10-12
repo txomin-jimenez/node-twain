@@ -23,7 +23,7 @@ module.exports =
 
     child_process = require('child_process')
 
-    child_process.execSync("#{cmwTwainCmd} #{cmdTwainPreviewOpts} #{tmpFilePath}")
+    child_process.execSync("#{cmdTwainCmd} #{cmdTwainPreviewOpts} #{tmpFilePath}")
 
     stat = fileSystem.statSync(tmpFilePath);
 
@@ -42,7 +42,7 @@ module.exports =
 
     child_process = require('child_process')
 
-    child_process.execSync("#{cmwTwainCmd} #{outputFile}")
+    child_process.execSync("#{cmdTwainCmd} #{outputFile}")
 
     res.json {ok: true}
     ###
@@ -54,7 +54,7 @@ module.exports =
 
     child_process = require('child_process')
 
-    child_process.execSync("#{cmwTwainCmd} #{tmpFilePath}")
+    child_process.execSync("#{cmdTwainCmd} #{tmpFilePath}")
 
     stat = fileSystem.statSync(tmpFilePath);
     outputFileName = options.fileName or tmpFileName
