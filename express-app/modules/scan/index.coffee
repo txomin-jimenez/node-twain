@@ -2,8 +2,6 @@ handlers = require './handlers'
 
 module.exports = (app) ->
 
-  handlers.appEnv = app.get('env')
-
   app.get "/api/preview", handlers.preview
   app.get "/api/scan", handlers.scan
 
