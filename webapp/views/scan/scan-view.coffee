@@ -10,22 +10,26 @@ module.exports = class ScanView extends View
   template: require './templates/scan-page'
 
   events:
+    'click #previewButton': 'preview'
     'click #scanButton': 'scan'
 
   render: ->
 
     super
 
+  preview: ->
+
+    Scanner.preview()
+    .then (previewImage) =>
+      @showPreview(previewImage)
+  
   scan: ->
 
     options = {}
 
-    Scanner.preview()
-    .then (previewImage) =>
+    options.fileName = @$('input#filename').val()
 
-      @showPreview(previewImage)
-
-      Scanner.scan()
+    Scanner.scan(options)
     .then =>
       @publishEvent "!application:showAlert",
         type: 'information'

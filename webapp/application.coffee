@@ -6,8 +6,6 @@ module.exports = class Application extends Chaplin.Application
     # You can fetch some data here and start app
     # (by calling `super`) after that.
 
-    window.savedPageStatus = {}
-
     super
 
     @subscribeEvent "!application:showAlert", @showAlertMessage
@@ -17,7 +15,7 @@ module.exports = class Application extends Chaplin.Application
     opts_ =
       text: ' '
       type: 'information'
-      layout: 'bottom'
+      layout: 'center'
       theme: 'relax'
       timeout: 1500
 

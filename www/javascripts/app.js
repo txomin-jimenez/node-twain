@@ -1,1 +1,1449 @@
-!function(){"use strict";var t="undefined"==typeof window?global:window;if("function"!=typeof t.require){var e={},r={},n={}.hasOwnProperty,i={},o=function(t,e){var r=0;e&&(e.indexOf(!1)&&(r="components/".length),e.indexOf("/",r)>0&&(e=e.substring(r,e.indexOf("/",r))));var n=i[t+"/index.js"]||i[e+"/deps/"+t+"/index.js"];return n?"components/"+n.substring(0,n.length-".js".length):t},s=function(){var t=/^\.\.?(\/|$)/;return function(e,r){var n,i,o=[];n=(t.test(r)?e+"/"+r:r).split("/");for(var s=0,a=n.length;a>s;s++)i=n[s],".."===i?o.pop():"."!==i&&""!==i&&o.push(i);return o.join("/")}}(),a=function(t){return t.split("/").slice(0,-1).join("/")},l=function(e){return function(r){var n=s(a(e),r);return t.require(n,e)}},u=function(t,e){var n={id:t,exports:{}};return r[t]=n,e(n.exports,l(t),n),n.exports},p=function(t,i){var a=s(t,".");if(null==i&&(i="/"),a=o(t,i),n.call(r,a))return r[a].exports;if(n.call(e,a))return u(a,e[a]);var l=s(a,"./index");if(n.call(r,l))return r[l].exports;if(n.call(e,l))return u(l,e[l]);throw new Error('Cannot find module "'+t+'" from "'+i+'"')};p.alias=function(t,e){i[e]=t},p.register=p.define=function(t,r){if("object"==typeof t)for(var i in t)n.call(t,i)&&(e[i]=t[i]);else e[t]=r},p.list=function(){var t=[];for(var r in e)n.call(e,r)&&t.push(r);return t},p.brunch=!0,t.require=p}}(),require.register("application",function(t,e,r){var n,i,o={}.hasOwnProperty,s=function(t,e){function r(){this.constructor=t}for(var n in e)o.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};n=e("views/alert-view"),r.exports=i=function(t){function e(){return e.__super__.constructor.apply(this,arguments)}return s(e,t),e.prototype.start=function(){return window.savedPageStatus={},e.__super__.start.apply(this,arguments),this.subscribeEvent("!application:showAlert",this.showAlertMessage)},e.prototype.showAlertMessage=function(t){var e;return e={text:" ",type:"information",layout:"bottom",theme:"relax",timeout:1500},_.extend(e,t),noty(e)},e}(Chaplin.Application)}),require.register("controllers/base/controller",function(t,e,r){var n,i,o={}.hasOwnProperty,s=function(t,e){function r(){this.constructor=t}for(var n in e)o.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};i=e("views/site-view"),r.exports=n=function(t){function e(){e.__super__.constructor.apply(this,arguments)}return s(e,t),e.prototype.beforeAction=function(){return $.noty.closeAll(),this.reuse("site",i)},e.prototype.checkSetup=function(){var t;return t=Q.defer(),$.ajax({type:"GET",url:"/api/setup/is_configured",dataType:"json",success:function(){return t.resolve()},error:function(e){return function(r){return e.publishEvent("!application:showAlert",{type:"information",text:"Configuración necesaria"}),Chaplin.utils.redirectTo({controller:"setup",action:"show"}),t.reject()}}(this)}),t.promise},e}(Chaplin.Controller)}),require.register("controllers/home-controller",function(t,e,r){var n,i,o,s={}.hasOwnProperty,a=function(t,e){function r(){this.constructor=t}for(var n in e)s.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};n=e("controllers/base/controller"),i=e("views/home/header-view"),r.exports=o=function(t){function e(){return e.__super__.constructor.apply(this,arguments)}return a(e,t),e.prototype.beforeAction=function(){return e.__super__.beforeAction.apply(this,arguments),this.reuse("header",i,{region:"header"})},e.prototype.index=function(){return this.view=new HomePageView({region:"main"})},e}(n)}),require.register("controllers/scan-controller",function(t,e,r){var n,i,o,s,a={}.hasOwnProperty,l=function(t,e){function r(){this.constructor=t}for(var n in e)a.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};n=e("controllers/base/controller"),i=e("views/home/header-view"),o=e("views/scan/scan-view"),r.exports=s=function(t){function e(){return e.__super__.constructor.apply(this,arguments)}return l(e,t),e.prototype.beforeAction=function(){return e.__super__.beforeAction.apply(this,arguments),this.reuse("header",i,{region:"header"})},e.prototype.index=function(t){return this.indexView=new o({containerMethod:"html",region:"main"})},e}(n)}),require.register("controllers/setup-controller",function(t,e,r){var n,i,o,s,a,l={}.hasOwnProperty,u=function(t,e){function r(){this.constructor=t}for(var n in e)l.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};n=e("controllers/base/controller"),i=e("views/home/header-view"),a=e("views/setup/setup-view"),s=e("models/setup/setup-model"),r.exports=o=function(t){function e(){return e.__super__.constructor.apply(this,arguments)}return u(e,t),e.prototype.beforeAction=function(){return e.__super__.beforeAction.apply(this,arguments),this.reuse("header",i,{region:"header"})},e.prototype.show=function(){return this.setupModel=new s,this.setupModel.fetch(),this.view=new a({region:"main",model:this.setupModel})},e.prototype.checkSetup=function(){return Q.fcall(function(){return!0})},e}(n)}),require.register("initialize",function(t,e,r){var n,i,o;n=e("application"),o=e("routes"),i=e("lib/utils"),$(function(){return $.fn.onTypeFinished=i.onTypeFinished,FastClick.attach(document.body),i18n.init({lng:"en",fallbackLng:"en",ns:{namespaces:["app"],defaultNs:"app"}},function(){return numeral.language("en"),new n({title:"Web Scanner",controllerSuffix:"-controller",routes:o})})})}),require.register("lib/scanner",function(t,e,r){r.exports={preview:function(){var t,e;return t=Q.defer(),e=new XMLHttpRequest,e.onreadystatechange=function(){var e,r;return 4===this.readyState?200===this.status?(r=window.URL||window.webkitURL,e=r.createObjectURL(this.response),t.resolve(e)):t.reject(this.statusText):void 0},e.open("GET","/api/preview"),e.responseType="blob",e.send(),t.promise},scan:function(t){return window.location.assign("/api/scan")}}}),require.register("lib/utils",function(t,e,r){var n,i,o,s;s=Chaplin.utils.beget(Chaplin.utils),o=function(t,e){return i18n.t(t,e)},n=function(t){return t.charAt(0).toUpperCase()+t.slice(1)},i=function(t){return o(t,{context:"plural"})},_.extend(s,{onTypeFinished:function(t){var e,r,n,i,o;return i=function(){var t,e,r,n;return clearTimeout(r),0===e?(e=(new Date).getTime(),t=1e3,void(r=setTimeout(o,1e3))):(n=(new Date).getTime(),t=(t+(n-e))/2,e=n,r=setTimeout(o,2*t))},o=function(){var e;return t.apply(),e=0},n=void 0,r=0,e=1e3,$(this).bind("keydown",i),this},naturalCmp:function(t,e){var r,n,i,o,s,a,l,u,p;if(t===e)return 0;if(!t)return-1;if(!e)return 1;for(i=/(\.\d+)|(\d+)|(\D+)/g,u=String(t).match(i),p=String(e).match(i),o=Math.min(u.length,p.length),s=0;o>s;){if(r=u[s],n=p[s],r!==n)return a=+r,l=+n,a===a&&l===l?a>l?1:-1:n>r?-1:1;s++}return u.length!==p.length?u.length-p.length:e>t?-1:1},i18n_:function(t,e,r){var s,a,l,u,p;return null==r&&(r={}),u=t.indexOf("t"),a=t.indexOf("p"),s=t.indexOf("c"),p=o(e,r),a>-1&&(l=i(e),null!=l&&(p=l)),s>-1&&(p=n(p)),p}}),"function"==typeof Object.seal&&Object.seal(s),window.trazautils=s,r.exports=s}),require.register("lib/view-helper",function(t,e,r){var n,i,o=[].slice;i=e("./utils"),n=function(t,e){return Handlebars.registerHelper(t,e)},n("with",function(t,e){return!t||Handlebars.Utils.isEmpty(t)?e.inverse(this):e.fn(t)}),n("without",function(t,e){var r;return r=e.inverse,e.inverse=e.fn,e.fn=r,Handlebars.helpers["with"].call(this,t,e)}),n("url",function(){var t,e,r,n;return r=arguments[0],e=3<=arguments.length?o.call(arguments,1,n=arguments.length-1):(n=1,[]),t=arguments[n++],i.reverse(r,e)}),n("capitalize",function(){var t,e,r,n;return r=arguments[0],e=3<=arguments.length?o.call(arguments,1,n=arguments.length-1):(n=1,[]),t=arguments[n++],r=r.toLowerCase().replace(/\b[a-z]/g,function(t){return t.toUpperCase()})}),n("i18n_",function(t,e,r){return i.i18n_(t,e,r)}),n("numeral_",function(t,e,r){return numeral(t).format(e)})}),require.register("mediator",function(t,e,r){var n;n=r.exports=Chaplin.mediator}),require.register("models/base/collection",function(t,e,r){var n,i,o={}.hasOwnProperty,s=function(t,e){function r(){this.constructor=t}for(var n in e)o.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};i=e("./model"),r.exports=n=function(t){function e(){return e.__super__.constructor.apply(this,arguments)}return s(e,t),_(e.prototype).extend(Chaplin.SyncMachine),e.prototype.type=null,e.prototype.initialize=function(){return e.__super__.initialize.apply(this,arguments),this.on("request",this.beginSync),this.on("sync",this.finishSync),this.on("error",this.unsync)},e.prototype.model=i,e}(Chaplin.Collection)}),require.register("models/base/model",function(t,e,r){var n,i={}.hasOwnProperty,o=function(t,e){function r(){this.constructor=t}for(var n in e)i.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};r.exports=n=function(t){function e(){return e.__super__.constructor.apply(this,arguments)}return o(e,t),_(e.prototype).extend(Chaplin.SyncMachine),e.prototype.idAttribute="_id",e.prototype.accessors=null,e.prototype.type=null,e.prototype.getAttributes=function(){var t,r,n,i,o;if(t=Chaplin.utils.beget(e.__super__.getAttributes.apply(this,arguments)),r=this.accessors)for(i=0,o=r.length;o>i;i++)n=r[i],t[n]=this[n].bind(this);return t},e.prototype.initialize=function(){return e.__super__.initialize.apply(this,arguments),this.save=_.debounce(this.save,500),this.on("request",this.beginSync),this.on("sync",this.finishSync),this.on("error",this.unsync),this.on("invalid",function(t){return function(e,r){return t.publishEvent("!application:showAlert",{type:"error",text:r})}}(this))},e.prototype.parse=function(t,e){return null!=t?_.omit(t,["ok"]):void 0},e.prototype.get=function(t){return null!=this.accessors&&this.accessors.indexOf(t)>-1?this[t]():e.__super__.get.apply(this,arguments)},e.prototype.set=function(t,r,n){var i,o;return e.__super__.set.apply(this,arguments),o="object"==typeof r?r:n,null!=o&&(i=o.autoSave),i&&this.save(null,{error:function(t){return function(e,r){return t.publishEvent("!application:showAlert",{type:"error",timeout:5e3,text:r})}}(this)}),this},e}(Chaplin.Model)}),require.register("models/setup/setup-model",function(t,e,r){var n,i,o,s={}.hasOwnProperty,a=function(t,e){function r(){this.constructor=t}for(var n in e)s.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};n=e("models/base/model"),o=e("lib/utils"),r.exports=i=function(t){function e(){return e.__super__.constructor.apply(this,arguments)}return a(e,t),e.prototype.idAttribute="_id",e.prototype.initialize=function(t,e){},e.prototype.url=function(){return"/api/setup"},e}(n)}),require.register("models/tables/table-collection",function(t,e,r){var n,i,o,s={}.hasOwnProperty,a=function(t,e){function r(){this.constructor=t}for(var n in e)s.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};n=e("models/base/collection"),o=e("models/tables/table-model"),r.exports=i=function(t){function e(){return e.__super__.constructor.apply(this,arguments)}return a(e,t),e.prototype.model=o,e.prototype.url="/api/tables",e.prototype.comparator="name",e}(n)}),require.register("models/tables/table-model",function(t,e,r){var n,i,o,s,a={}.hasOwnProperty,l=function(t,e){function r(){this.constructor=t}for(var n in e)a.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};n=e("models/base/model"),s=e("lib/utils"),i=e("models/columns/column-collection"),r.exports=o=function(t){function e(){return e.__super__.constructor.apply(this,arguments)}return l(e,t),e.calulateNextAlias=function(t){var e;return t.sort(s.naturalCmp),t=_.sortBy(t,function(t){return t.charCodeAt(0)<97?Array(t.length).join("￰")+t:t}),console.log(t),e=t[t.length-1],e.substr(0,e.length-1)+String.fromCharCode(e.charCodeAt(e.length-1)+1)},e.prototype.idPrefix="table",e.prototype.tableNamesList=null,e.prototype.columnCollection=null,e.prototype.defaults={_id:"table::",type:"table"},e.prototype.accessors=["aliasIntValue"],e.prototype.initialize=function(t,r){return e.__super__.initialize.apply(this,arguments),null==t&&(null!=r?r.aliasList:void 0)&&this.set("alias",e.calulateNextAlias(r.aliasList)),null==t&&(null!=r?r.tableNamesList:void 0)&&(this.tableNamesList=r.tableNamesList),this.columnCollection=new i({tableParent:this}),this.nameChanged=_.debounce(this.nameChanged,500),this.listenTo(this,"change:name",this.nameChanged)},e.prototype.url=function(){return"/api/tables/"+this.get("_id")},e.prototype.aliasIntValue=function(){var t;return t=this.get("alias"),1===t.length&&t.charCodeAt()<97?26+s.base26ToInt(t)/100:"$pl"===t?-1e6:s.base26ToInt(t)},e.prototype.validate=function(t,e){var r;return r="",(null==t.alias||0===t.alias.length)&&(r+="\nEl alias es un dato obligatorio."),null==t.name||0===t.name.length?r+="\nEl nombre es un dato obligatorio.":null!=this.tableNamesList&&this.tableNamesList.length>0&&this.tableNamesList.indexOf(t.name)>-1&&(r+="\nYa existe una tabla con el mismo nombre"),0===r.length&&(r=null),r},e.prototype.nameChanged=function(){return this.set({_id:""+this.idPrefix+"::"+this.get("name")})},e.prototype.getColumn=function(t){return null!=this.columnCollection?this.columnCollection.findWhere({alias:t}):void 0},e.prototype.dispose=function(){var t,r,n,i;if(!this.disposed){for(null!=this.columnCollection&&this.columnCollection.dispose(),r=["tableNamesList","columnCollection"],n=0,i=r.length;i>n;n++)t=r[n],delete this[t];return e.__super__.dispose.apply(this,arguments)}},e}(n)}),require.register("routes",function(t,e,r){r.exports=function(t){return t("","scan#index"),t("scan","scan#index"),t("setup","setup#show")}}),require.register("views/alert-view",function(t,e,r){var n,i,o={}.hasOwnProperty,s=function(t,e){function r(){this.constructor=t}for(var n in e)o.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};i=e("views/base/view"),r.exports=n=function(t){function r(t){null!=t&&_.extend(this,_.pick(t,["messageData"])),r.__super__.constructor.apply(this,arguments)}return s(r,t),r.prototype.region="alerts",r.prototype.template=e("./templates/alert"),r.prototype.autoRender=!0,r.prototype.render=function(){return r.__super__.render.apply(this,arguments),setTimeout(function(t){return function(){return t.dispose()}}(this),1e4),this.$(".alert").on("closed.bs.alert",function(t){return function(){return t.dispose()}}(this))},r.prototype.getTemplateData=function(){return this.messageData},r.prototype.dispose=function(){var t,e,n,i;if(!this.disposed){for(e=["messageData"],n=0,i=e.length;i>n;n++)t=e[n],delete this[t];return r.__super__.dispose.apply(this,arguments)}},r}(i)}),require.register("views/base/collection-view",function(t,e,r){var n,i,o,s,a,l=function(t,e){return function(){return t.apply(e,arguments)}},u={}.hasOwnProperty,p=function(t,e){function r(){this.constructor=t}for(var n in e)u.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};s=e("./view"),o=e("lib/utils"),n=Backbone.$,a=function(){return n?function(t,e){return t.toggle(e)}:function(t,e){return t.style.display=e?"":"none"}}(),r.exports=i=function(t){function e(t){var r;null==t&&(t={}),this.saveScrollInfo=l(this.saveScrollInfo,this),this.filterFN=l(this.filterFN,this),null!=this.searchFieldSelector&&(this.events["keyup "+this.searchFieldSelector]="filterList"),null!=this.renderAnimation&&(null!=t.className?t.className=t.className+(" animated "+this.renderAnimation):this.className=this.className+(" animated "+this.renderAnimation)),null!=t.defaultFilterValue&&(this.defaultFilterValue=t.defaultFilterValue),e.__super__.constructor.apply(this,arguments),r=this.onScreenResize,this.onScreenResize=_.debounce(function(t){return function(){return r.apply(t,arguments)}}(this),100),n(window).on("resize.onScreenResize_"+this.cid,this.onScreenResize),n(window).on("orientationchange.onScreenResize_"+this.cid,this.onScreenResize)}return p(e,t),e.prototype.getTemplateFunction=s.prototype.getTemplateFunction,e.prototype.useCssAnimation=!0,e.prototype.animationStartClass="animated fadeIn",e.prototype.animationEndClass="animated fadeIn",e.prototype.renderAnimation="fadeIn",e.prototype._rendered=!1,e.prototype.searchFieldSelector=null,e.prototype.defaultFilterAttr=null,e.prototype.defaultFilterValue=null,e.prototype.initialize=function(){return e.__super__.initialize.apply(this,arguments),this.loadLastParams()},e.prototype.loadLastParams=function(){var t,e,r,n,i,o;return t=null!=(i=this.collection)&&null!=(o=i.tableParent)?o.id:void 0,e=""+this.className+"_"+t,(r=window.savedPageStatus)[e]||(r[e]={}),this.currentParams=window.savedPageStatus[e],(n=this.currentParams).filterAttr||(n.filterAttr=this.defaultFilterAttr||"name"),null!=this.defaultFilterValue&&null==this.currentParams.filterValue&&(this.currentParams.filterValue=this.defaultFilterValue),this.orderByAttr(this.currentParams.filterAttr,this.currentParams.filterValue)},e.prototype.render=function(){return this._rendered=!1,e.__super__.render.apply(this,arguments),this.adjustSearchField(this.currentParams.filterAttr,this.currentParams.filterValue),this._rendered=!0,this.trigger("rendered"),this},e.prototype.attach=function(){return e.__super__.attach.apply(this,arguments),this.adjustListHeight(),this.adjustScrollPosition()},e.prototype.onScreenResize=function(){return this.adjustListHeight()},e.prototype.adjustListHeight=function(){var t;return t=function(t){return function(e){var r;return null==e&&(e=!1),r=n(window).height()-t.$(t.listSelector).offset().top-20,250>r&&(r=250),e&&(r-=20),t.$(t.listSelector).height(r)}}(this),this.$(".modal").length>0?"false"===n(".modal").attr("aria-hidden")?t(!0):this.$(".modal").on("shown.bs.modal",function(e){return function(){return t(!0)}}(this)):t()},e.prototype.adjustScrollPosition=function(){return null!=this.currentParams.scrollTop?this.$(this.listSelector).scrollTop(this.currentParams.scrollTop):void 0},e.prototype.adjustSearchField=function(t,e){return null!=this.searchFieldSelector?this.whenRendered().then(function(r){return function(){return r.$(r.searchFieldSelector).val(e),r.$(r.searchFieldSelector).attr("placeholder",o.i18n_("c","search_by_term",{term:o.i18n_("t",t)}))}}(this)):void 0},e.prototype.filterList=function(t,e){return null!=this.searchFieldSelector&&(null!=e?this.$(this.searchFieldSelector).val(e):e=this.$(this.searchFieldSelector).val()),null!=e&&this.filter(function(t){return function(r){return t.filterFN(r,e)}}(this)),this.currentParams.filterValue=e},e.prototype.filterFN=function(t,e){var r;return r=t.get(this.currentParams.filterAttr),null!=r?r.toLowerCase().indexOf(e.toLowerCase())>-1:!1},e.prototype.orderByAttr=function(t,e){return null==e&&(e=""),this.whenRendered().then(function(r){return function(){var n;return r.currentParams.filterAttr=t,r.currentParams.filterValue=e,n=r.currentParams.filterAttr,"alias"===n&&(n="aliasIntValue"),r.collection.comparator=function(t){var e;return e=t.get(n)},r.adjustSearchField(r.currentParams.filterAttr,r.currentParams.filterValue),r.filterList(null,e),r.collection.sort()}}(this))},e.prototype.saveScrollInfo=function(){return this.currentParams.scrollTop=this.$(this.listSelector).scrollTop()},e.prototype.filterCallback=function(t,e){return n&&t.$el.stop(!0,!0),t.el.style.display="block",a(n?t.$el:t.el,e)},e.prototype.initItemView=function(t){if(this.itemView)return new this.itemView({autoRender:!1,model:t,saveScrollPosition:this.saveScrollInfo});throw new Error("The CollectionView#itemView property must be defined or the initItemView() must be overridden.")},e.prototype.reattach=function(){var t,e,r,n;for(this.attach(),this.delegateEvents(),n=this.subviews,e=0,r=n.length;r>e;e++)t=n[e],t.reattach();return this},e.prototype.whenRendered=function(){var t;return t=Q.defer(),this._rendered?t.resolve():this.listenToOnce(this,"rendered",function(){return t.resolve()}),t.promise},e.prototype.dispose=function(){var t,r,i,o;if(!this.disposed){for(n(window).off(".onScreenResize_"+this.cid),r=["currentParams"],i=0,o=r.length;o>i;i++)t=r[i],delete this[t];return e.__super__.dispose.apply(this,arguments)}},e}(Chaplin.CollectionView)}),require.register("views/base/view",function(t,e,r){var n,i={}.hasOwnProperty,o=function(t,e){function r(){this.constructor=t}for(var n in e)i.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};e("lib/view-helper"),r.exports=n=function(t){function e(t){var r,n;null==t&&(t={}),null!=this.renderAnimation&&(null!=t.className?t.className=t.className+(" animated "+this.renderAnimation):this.className=this.className+(" animated "+this.renderAnimation)),e.__super__.constructor.apply(this,arguments),null!=this.className&&((r=window.savedPageStatus)[n=this.className]||(r[n]={}),this.currentParams=window.savedPageStatus[this.className])}return o(e,t),e.prototype.optionNames=Chaplin.View.prototype.optionNames.concat(["template"]),e.prototype._rendered=!1,e.prototype.renderAnimation="fadeIn",e.prototype.getTemplateFunction=function(){return this.template},e.prototype.render=function(){return this._rendered=!1,e.__super__.render.apply(this,arguments),this._rendered=!0,this.trigger("rendered"),this},e.prototype.reattach=function(){var t,e,r,n;for(this.attach(),this.delegateEvents(),n=this.subviews,e=0,r=n.length;r>e;e++)t=n[e],t.reattach();return this},e.prototype.attach=function(){return e.__super__.attach.apply(this,arguments),null!=this.model&&"function"==typeof this.stickit?this.stickit():void 0},e.prototype.whenRendered=function(){var t;return t=Q.defer(),this._rendered?t.resolve():this.listenToOnce(this,"rendered",function(){return t.resolve()}),t.promise},e.prototype.dispose=function(){var t,r,n,i;for(null!=this.model&&"function"==typeof this.stickit&&this.unstickit(),r=["currentParams"],n=0,i=r.length;i>n;n++)t=r[n],delete this[t];return e.__super__.dispose.apply(this,arguments)},e}(Chaplin.View)}),require.register("views/home/header-view",function(t,e,r){var n,i,o={}.hasOwnProperty,s=function(t,e){function r(){this.constructor=t}for(var n in e)o.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};i=e("views/base/view"),r.exports=n=function(t){function r(){return r.__super__.constructor.apply(this,arguments)}return s(r,t),r.prototype.autoRender=!0,r.prototype.container="#header-container",r.prototype.containerMethod="html",r.prototype.template=e("./templates/header"),r}(i)}),require.register("views/home/templates/header",function(t,e,r){r.exports=Handlebars.template(function(t,e,r,n,i){this.compilerInfo=[4,">= 1.0.0"],r=this.merge(r,t.helpers),i=i||{};var o,s,a="",l=r.helperMissing,u=this.escapeExpression;return a+='<div class="container"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" class="navbar-toggle collapsed"><span class="sr-only">'+u((o=r.i18n_||e&&e.i18n_,s={hash:{},data:i},o?o.call(e,"c","toggle_navigation",s):l.call(e,"i18n_","c","toggle_navigation",s)))+'</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand"><img src="images/logo.png" alt="logo"/><span class="app-title"><strong>Web&nbsp;</strong>Scanner</span></a></div><div id="navbar" class="navbar-collapse collapse"></div></div>'})}),require.register("views/scan/scan-view",function(t,e,r){var n,i,o,s,a=function(t,e){return function(){return t.apply(e,arguments)}},l={}.hasOwnProperty,u=function(t,e){function r(){this.constructor=t}for(var n in e)l.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};s=e("views/base/view"),o=e("lib/utils"),i=e("lib/scanner"),r.exports=n=function(t){function r(){return this.saveImage=a(this.saveImage,this),this.showPreview=a(this.showPreview,this),r.__super__.constructor.apply(this,arguments)}return u(r,t),r.prototype.autoRender=!0,r.prototype.className="scan-page",r.prototype.template=e("./templates/scan-page"),r.prototype.events={"click #scanButton":"scan"},r.prototype.render=function(){return r.__super__.render.apply(this,arguments)},r.prototype.scan=function(){var t;return t={},i.preview().then(function(t){return function(e){return t.showPreview(e),i.scan()}}(this)).then(function(t){return function(){return t.publishEvent("!application:showAlert",{type:"information",text:"Image scanned successfully!"})}}(this))["catch"](function(t){return function(e){return console.error(e),t.publishEvent("!application:showAlert",{type:"error",text:e})}}(this))},r.prototype.showPreview=function(t){return this.$("img.scanned-img").attr("src",t)},r.prototype.saveImage=function(t){return window.location.assign(t)},r}(s)}),require.register("views/scan/templates/scan-page",function(t,e,r){r.exports=Handlebars.template(function(t,e,r,n,i){this.compilerInfo=[4,">= 1.0.0"],r=this.merge(r,t.helpers),i=i||{};var o,s,a="",l=r.helperMissing,u=this.escapeExpression;return a+='<div class="row scan-actions"><div class="col-md-8 col-md-offset-2"><div class="row"><div class="col-md-8"><div class="form-horizontal"><div class="form-group"><label for="baseRepoPath" class="col-sm-4 control-label">'+u((o=r.i18n_||e&&e.i18n_,s={hash:{},data:i},o?o.call(e,"c","file_name",s):l.call(e,"i18n_","c","file_name",s)))+'</label><div class="col-sm-8"><input id="filename" type="text" placeholder="file name for save" value="filename.jpg" class="form-control"/></div></div></div></div><div class="col-md-4"><button id="scanButton" type="button" class="btn btn-primary btn-lg btn-block">'+u((o=r.i18n_||e&&e.i18n_,s={hash:{},data:i},o?o.call(e,"c","scan_and_save",s):l.call(e,"i18n_","c","scan_and_save",s)))+'</button></div></div></div></div><div class="row"><div class="col-md-8 col-md-offset-2"><div class="panel panel-default"><div class="panel-heading text-center">'+u((o=r.i18n_||e&&e.i18n_,s={hash:{},data:i},o?o.call(e,"c","image_preview",s):l.call(e,"i18n_","c","image_preview",s)))+'</div><div class="panel-body"><img class="scanned-img"/></div></div></div></div>'})}),require.register("views/setup/setup-view",function(t,e,r){var n,i,o,s={}.hasOwnProperty,a=function(t,e){function r(){this.constructor=t}for(var n in e)s.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};o=e("views/base/view"),i=e("lib/utils"),r.exports=n=function(t){function r(){return r.__super__.constructor.apply(this,arguments)}return a(r,t),r.prototype.autoRender=!0,r.prototype.className="setup-page",r.prototype.template=e("./templates/setup"),r.prototype.bindings={"#baseRepoPath":"base_repo_path"},r.prototype.events={"click #saveButton":"saveSetup"},r.prototype.saveSetup=function(){var t;return t={success:function(t){return function(){return console.log("save setup success!"),Chaplin.utils.redirectTo({url:"/"})}}(this),error:function(t){return function(e,r){return t.publishEvent("!application:showAlert",{type:"error",text:i.i18n_("c","setup:invalid_setup_msg")})}}(this)},this.model.save(null,t)},r}(o)}),require.register("views/setup/templates/setup",function(t,e,r){r.exports=Handlebars.template(function(t,e,r,n,i){this.compilerInfo=[4,">= 1.0.0"],r=this.merge(r,t.helpers),i=i||{};var o,s,a,l="",u=r.helperMissing,p=this.escapeExpression,c="function";return l+='<div class="page-title"><h4>'+p((s=r.i18n_||e&&e.i18n_,a={hash:{},data:i},s?s.call(e,"c","setup:editor_setup",a):u.call(e,"i18n_","c","setup:editor_setup",a)))+'</h4></div><div class="row"><div class="col-md-8 col-md-offset-2"><div class="panel panel-default"><div class="panel-body"><div class="form-horizontal"><div class="form-group"><label for="baseRepoPath" class="col-sm-4 control-label">'+p((s=r.i18n_||e&&e.i18n_,a={hash:{},data:i},s?s.call(e,"c","setup:base_files_repo_path",a):u.call(e,"i18n_","c","setup:base_files_repo_path",a)))+'</label><div class="col-sm-8"><input id="baseRepoPath" type="text" placeholder="path" value="',(s=r.base_repo_path)?o=s.call(e,{hash:{},data:i}):(s=e&&e.base_repo_path,o=typeof s===c?s.call(e,{hash:{},data:i}):s),l+=p(o)+'" data-attr="base_repo_path" class="form-control"/></div></div></div></div><div class="panel-footer"><div class="row"><div class="col-xs-12"><div class="pull-right"><button id="saveButton" type="button" class="btn btn-primary">'+p((s=r.i18n_||e&&e.i18n_,a={hash:{},data:i},s?s.call(e,"c","save",a):u.call(e,"i18n_","c","save",a)))+"</button></div></div></div></div></div></div></div>"})}),require.register("views/site-view",function(t,e,r){var n,i,o={}.hasOwnProperty,s=function(t,e){function r(){this.constructor=t}for(var n in e)o.call(e,n)&&(t[n]=e[n]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t};i=e("views/base/view"),r.exports=n=function(t){function r(){return r.__super__.constructor.apply(this,arguments)}return s(r,t),r.prototype.container="body",r.prototype.id="site-container",r.prototype.regions={header:"#header-container",main:"#page-container",alerts:".alert-container"},r.prototype.template=e("./templates/site"),r}(i)}),require.register("views/templates/alert",function(t,e,r){r.exports=Handlebars.template(function(t,e,r,n,i){this.compilerInfo=[4,">= 1.0.0"],r=this.merge(r,t.helpers),i=i||{};var o,s,a="",l="function",u=this.escapeExpression;return a+='<div role="alert" class="alert alert-dismissible alert-',(s=r.level)?o=s.call(e,{hash:{},data:i}):(s=e&&e.level,o=typeof s===l?s.call(e,{hash:{},data:i}):s),a+=u(o)+'"><button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true">&times;</span></button><strong>',(s=r.title)?o=s.call(e,{hash:{},data:i}):(s=e&&e.title,o=typeof s===l?s.call(e,{hash:{},data:i}):s),a+=u(o)+"</strong> ",(s=r.message)?o=s.call(e,{hash:{},data:i}):(s=e&&e.message,o=typeof s===l?s.call(e,{hash:{},data:i}):s),a+=u(o)+"</div>"})}),require.register("views/templates/backbutton",function(exports,require,module){module.exports=function anonymous(locals,attrs,escape,rethrow,merge){attrs=attrs||jade.attrs,escape=escape||jade.escape,rethrow=rethrow||jade.rethrow,merge=merge||jade.merge;var buf=[];with(locals||{}){buf.push("<a href=\"javascript:window.history.back()\" class=\"text-left\">{{i18n_ 'c' 'back'}}</a>")}return buf.join("")}}),require.register("views/templates/site",function(t,e,r){r.exports=Handlebars.template(function(t,e,r,n,i){return this.compilerInfo=[4,">= 1.0.0"],r=this.merge(r,t.helpers),i=i||{},'<header id="header-container" class="navbar navbar-inverse navbar-fixed-top"></header><div class="container"><div id="page-container"></div></div>'})});
+(function() {
+  'use strict';
+
+  var globals = typeof window === 'undefined' ? global : window;
+  if (typeof globals.require === 'function') return;
+
+  var modules = {};
+  var cache = {};
+  var has = ({}).hasOwnProperty;
+
+  var aliases = {};
+
+  var endsWith = function(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+  };
+
+  var unalias = function(alias, loaderPath) {
+    var start = 0;
+    if (loaderPath) {
+      if (loaderPath.indexOf('components/' === 0)) {
+        start = 'components/'.length;
+      }
+      if (loaderPath.indexOf('/', start) > 0) {
+        loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
+      }
+    }
+    var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
+    if (result) {
+      return 'components/' + result.substring(0, result.length - '.js'.length);
+    }
+    return alias;
+  };
+
+  var expand = (function() {
+    var reg = /^\.\.?(\/|$)/;
+    return function(root, name) {
+      var results = [], parts, part;
+      parts = (reg.test(name) ? root + '/' + name : name).split('/');
+      for (var i = 0, length = parts.length; i < length; i++) {
+        part = parts[i];
+        if (part === '..') {
+          results.pop();
+        } else if (part !== '.' && part !== '') {
+          results.push(part);
+        }
+      }
+      return results.join('/');
+    };
+  })();
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function(name) {
+      var absolute = expand(dirname(path), name);
+      return globals.require(absolute, path);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var module = {id: name, exports: {}};
+    cache[name] = module;
+    definition(module.exports, localRequire(name), module);
+    return module.exports;
+  };
+
+  var require = function(name, loaderPath) {
+    var path = expand(name, '.');
+    if (loaderPath == null) loaderPath = '/';
+    path = unalias(name, loaderPath);
+
+    if (has.call(cache, path)) return cache[path].exports;
+    if (has.call(modules, path)) return initModule(path, modules[path]);
+
+    var dirIndex = expand(path, './index');
+    if (has.call(cache, dirIndex)) return cache[dirIndex].exports;
+    if (has.call(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
+
+    throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
+  };
+
+  require.alias = function(from, to) {
+    aliases[to] = from;
+  };
+
+  require.register = require.define = function(bundle, fn) {
+    if (typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has.call(bundle, key)) {
+          modules[key] = bundle[key];
+        }
+      }
+    } else {
+      modules[bundle] = fn;
+    }
+  };
+
+  require.list = function() {
+    var result = [];
+    for (var item in modules) {
+      if (has.call(modules, item)) {
+        result.push(item);
+      }
+    }
+    return result;
+  };
+
+  require.brunch = true;
+  globals.require = require;
+})();
+require.register("application", function(exports, require, module) {
+var AlertView, Application,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+AlertView = require('views/alert-view');
+
+module.exports = Application = (function(_super) {
+  __extends(Application, _super);
+
+  function Application() {
+    return Application.__super__.constructor.apply(this, arguments);
+  }
+
+  Application.prototype.start = function() {
+    Application.__super__.start.apply(this, arguments);
+    return this.subscribeEvent("!application:showAlert", this.showAlertMessage);
+  };
+
+  Application.prototype.showAlertMessage = function(messageData) {
+    var opts_;
+    opts_ = {
+      text: ' ',
+      type: 'information',
+      layout: 'center',
+      theme: 'relax',
+      timeout: 1500
+    };
+    _.extend(opts_, messageData);
+    return noty(opts_);
+  };
+
+  return Application;
+
+})(Chaplin.Application);
+});
+
+;require.register("controllers/base/controller", function(exports, require, module) {
+var Controller, SiteView,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+SiteView = require('views/site-view');
+
+module.exports = Controller = (function(_super) {
+  __extends(Controller, _super);
+
+  function Controller() {
+    Controller.__super__.constructor.apply(this, arguments);
+  }
+
+  Controller.prototype.beforeAction = function() {
+    $.noty.closeAll();
+    return this.reuse('site', SiteView);
+  };
+
+  return Controller;
+
+})(Chaplin.Controller);
+});
+
+;require.register("controllers/home-controller", function(exports, require, module) {
+var Controller, HeaderView, HomeController,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Controller = require('controllers/base/controller');
+
+HeaderView = require('views/home/header-view');
+
+module.exports = HomeController = (function(_super) {
+  __extends(HomeController, _super);
+
+  function HomeController() {
+    return HomeController.__super__.constructor.apply(this, arguments);
+  }
+
+  HomeController.prototype.beforeAction = function() {
+    HomeController.__super__.beforeAction.apply(this, arguments);
+    return this.reuse('header', HeaderView, {
+      region: 'header'
+    });
+  };
+
+  HomeController.prototype.index = function() {
+    return this.view = new HomePageView({
+      region: 'main'
+    });
+  };
+
+  return HomeController;
+
+})(Controller);
+});
+
+;require.register("controllers/scan-controller", function(exports, require, module) {
+var Controller, HeaderView, ScanPageView, TablesController,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Controller = require('controllers/base/controller');
+
+HeaderView = require('views/home/header-view');
+
+ScanPageView = require('views/scan/scan-view');
+
+module.exports = TablesController = (function(_super) {
+  __extends(TablesController, _super);
+
+  function TablesController() {
+    return TablesController.__super__.constructor.apply(this, arguments);
+  }
+
+  TablesController.prototype.beforeAction = function() {
+    TablesController.__super__.beforeAction.apply(this, arguments);
+    return this.reuse('header', HeaderView, {
+      region: 'header'
+    });
+  };
+
+  TablesController.prototype.index = function(params) {
+    return this.indexView = new ScanPageView({
+      containerMethod: 'html',
+      region: 'main'
+    });
+  };
+
+  return TablesController;
+
+})(Controller);
+});
+
+;require.register("controllers/setup-controller", function(exports, require, module) {
+var Controller, HeaderView, SetupController, SetupModel, SetupPageView,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Controller = require('controllers/base/controller');
+
+HeaderView = require('views/home/header-view');
+
+SetupPageView = require('views/setup/setup-view');
+
+SetupModel = require('models/setup/setup-model');
+
+module.exports = SetupController = (function(_super) {
+  __extends(SetupController, _super);
+
+  function SetupController() {
+    return SetupController.__super__.constructor.apply(this, arguments);
+  }
+
+  SetupController.prototype.beforeAction = function() {
+    SetupController.__super__.beforeAction.apply(this, arguments);
+    return this.reuse('header', HeaderView, {
+      region: 'header'
+    });
+  };
+
+  SetupController.prototype.show = function() {
+    this.setupModel = new SetupModel;
+    this.setupModel.fetch();
+    return this.view = new SetupPageView({
+      region: 'main',
+      model: this.setupModel
+    });
+  };
+
+  SetupController.prototype.checkSetup = function() {
+    return Q.fcall(function() {
+      return true;
+    });
+  };
+
+  return SetupController;
+
+})(Controller);
+});
+
+;require.register("initialize", function(exports, require, module) {
+var Application, Utils, routes;
+
+Application = require('application');
+
+routes = require('routes');
+
+Utils = require('lib/utils');
+
+$(function() {
+  $.fn.onTypeFinished = Utils.onTypeFinished;
+  FastClick.attach(document.body);
+  return i18n.init({
+    lng: 'en',
+    fallbackLng: 'en',
+    ns: {
+      namespaces: ['app'],
+      defaultNs: 'app'
+    }
+  }, function() {
+    numeral.language('en');
+    return new Application({
+      title: 'Web Scanner',
+      controllerSuffix: '-controller',
+      routes: routes
+    });
+  });
+});
+});
+
+;require.register("lib/scanner", function(exports, require, module) {
+module.exports = {
+
+  /**
+    Request scan preview 
+  @method preview
+   */
+  preview: function() {
+    var deferred, xhr;
+    deferred = Q.defer();
+    xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      var imageUrl, url;
+      if (this.readyState === 4) {
+        if (this.status >= 200 && this.status < 300) {
+          url = window.URL || window.webkitURL;
+          imageUrl = url.createObjectURL(this.response);
+          return deferred.resolve(imageUrl);
+        } else {
+          return deferred.reject(this.statusText);
+        }
+      }
+    };
+    xhr.open('GET', "/api/preview");
+    xhr.responseType = 'blob';
+    xhr.send();
+    return deferred.promise;
+  },
+
+  /**
+    Request scan and send image download
+  @method scan
+   */
+  scan: function(options) {
+    if (options == null) {
+      options = {};
+    }
+    if (options.fileName != null) {
+      window.location.assign("/api/scan?fileName=" + options.fileName);
+    } else {
+      window.location.assign("/api/scan");
+    }
+    return Q();
+  }
+};
+});
+
+;require.register("lib/utils", function(exports, require, module) {
+var capitalize_, pluralize_, translate_, utils;
+
+utils = Chaplin.utils.beget(Chaplin.utils);
+
+translate_ = function(str, opts) {
+  return i18n.t(str, opts);
+};
+
+capitalize_ = function(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+pluralize_ = function(str) {
+  return translate_(str, {
+    context: "plural"
+  });
+};
+
+_.extend(utils, {
+  onTypeFinished: function(func) {
+    var D, S, T, onKeyPress, onTimeOut;
+    onKeyPress = function() {
+      var D, S, T, t;
+      clearTimeout(T);
+      if (S === 0) {
+        S = new Date().getTime();
+        D = 1000;
+        T = setTimeout(onTimeOut, 1000);
+        return;
+      }
+      t = new Date().getTime();
+      D = (D + (t - S)) / 2;
+      S = t;
+      return T = setTimeout(onTimeOut, D * 2);
+    };
+    onTimeOut = function() {
+      var S;
+      func.apply();
+      return S = 0;
+    };
+    T = undefined;
+    S = 0;
+    D = 1000;
+    $(this).bind("keydown", onKeyPress);
+    return this;
+  },
+  naturalCmp: function(str1, str2) {
+    var a, b, cmpRegex, count, i, num1, num2, tokens1, tokens2;
+    if (str1 === str2) {
+      return 0;
+    }
+    if (!str1) {
+      return -1;
+    }
+    if (!str2) {
+      return 1;
+    }
+    cmpRegex = /(\.\d+)|(\d+)|(\D+)/g;
+    tokens1 = String(str1).match(cmpRegex);
+    tokens2 = String(str2).match(cmpRegex);
+    count = Math.min(tokens1.length, tokens2.length);
+    i = 0;
+    while (i < count) {
+      a = tokens1[i];
+      b = tokens2[i];
+      if (a !== b) {
+        num1 = +a;
+        num2 = +b;
+        if (num1 === num1 && num2 === num2) {
+          if (num1 > num2) {
+            return 1;
+          } else {
+            return -1;
+          }
+        }
+        if (a < b) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      i++;
+    }
+    if (tokens1.length !== tokens2.length) {
+      return tokens1.length - tokens2.length;
+    }
+    if (str1 < str2) {
+      return -1;
+    } else {
+      return 1;
+    }
+  },
+  i18n_: function(op, str, options) {
+    var c, p, plural_, t, translation;
+    if (options == null) {
+      options = {};
+    }
+    t = op.indexOf("t");
+    p = op.indexOf("p");
+    c = op.indexOf("c");
+    translation = translate_(str, options);
+    if (p > -1) {
+      plural_ = pluralize_(str);
+      if (plural_ != null) {
+        translation = plural_;
+      }
+    }
+    if (c > -1) {
+      translation = capitalize_(translation);
+    }
+    return translation;
+  }
+});
+
+if (typeof Object.seal === "function") {
+  Object.seal(utils);
+}
+
+module.exports = utils;
+});
+
+;require.register("lib/view-helper", function(exports, require, module) {
+var register, utils,
+  __slice = [].slice;
+
+utils = require('./utils');
+
+register = function(name, fn) {
+  return Handlebars.registerHelper(name, fn);
+};
+
+register('with', function(context, options) {
+  if (!context || Handlebars.Utils.isEmpty(context)) {
+    return options.inverse(this);
+  } else {
+    return options.fn(context);
+  }
+});
+
+register('without', function(context, options) {
+  var inverse;
+  inverse = options.inverse;
+  options.inverse = options.fn;
+  options.fn = inverse;
+  return Handlebars.helpers["with"].call(this, context, options);
+});
+
+register('url', function() {
+  var options, params, routeName, _i;
+  routeName = arguments[0], params = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), options = arguments[_i++];
+  return utils.reverse(routeName, params);
+});
+
+register('capitalize', function() {
+  var options, params, str, _i;
+  str = arguments[0], params = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), options = arguments[_i++];
+  str = str.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+    return letter.toUpperCase();
+  });
+  return str;
+});
+
+register("i18n_", function(op, str, options) {
+  return utils.i18n_(op, str, options);
+});
+
+register("numeral_", function(number, format, options) {
+  return numeral(number).format(format);
+});
+});
+
+;require.register("mediator", function(exports, require, module) {
+var mediator;
+
+mediator = module.exports = Chaplin.mediator;
+});
+
+;require.register("models/base/collection", function(exports, require, module) {
+var Collection, Model,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Model = require('./model');
+
+module.exports = Collection = (function(_super) {
+  __extends(Collection, _super);
+
+  function Collection() {
+    return Collection.__super__.constructor.apply(this, arguments);
+  }
+
+  _(Collection.prototype).extend(Chaplin.SyncMachine);
+
+  Collection.prototype.type = null;
+
+  Collection.prototype.initialize = function() {
+    Collection.__super__.initialize.apply(this, arguments);
+    this.on('request', this.beginSync);
+    this.on('sync', this.finishSync);
+    return this.on('error', this.unsync);
+  };
+
+  Collection.prototype.model = Model;
+
+  return Collection;
+
+})(Chaplin.Collection);
+});
+
+;require.register("models/base/model", function(exports, require, module) {
+var Model,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+module.exports = Model = (function(_super) {
+  __extends(Model, _super);
+
+  function Model() {
+    return Model.__super__.constructor.apply(this, arguments);
+  }
+
+  _(Model.prototype).extend(Chaplin.SyncMachine);
+
+  Model.prototype.idAttribute = "_id";
+
+  Model.prototype.accessors = null;
+
+  Model.prototype.type = null;
+
+  Model.prototype.getAttributes = function() {
+    var data, fns, k, _i, _len;
+    data = Chaplin.utils.beget(Model.__super__.getAttributes.apply(this, arguments));
+    if (fns = this.accessors) {
+      for (_i = 0, _len = fns.length; _i < _len; _i++) {
+        k = fns[_i];
+        data[k] = this[k].bind(this);
+      }
+    }
+    return data;
+  };
+
+  Model.prototype.initialize = function() {
+    Model.__super__.initialize.apply(this, arguments);
+    this.save = _.debounce(this.save, 500);
+    this.on('request', this.beginSync);
+    this.on('sync', this.finishSync);
+    this.on('error', this.unsync);
+    return this.on('invalid', (function(_this) {
+      return function(model, error) {
+        return _this.publishEvent("!application:showAlert", {
+          type: 'error',
+          text: error
+        });
+      };
+    })(this));
+  };
+
+  Model.prototype.parse = function(response, options) {
+    if (response != null) {
+      return _.omit(response, ['ok']);
+    }
+  };
+
+  Model.prototype.get = function(attr) {
+    if ((this.accessors != null) && this.accessors.indexOf(attr) > -1) {
+      return this[attr]();
+    } else {
+      return Model.__super__.get.apply(this, arguments);
+    }
+  };
+
+  Model.prototype.set = function(key, val, options) {
+    var autoSave, opts;
+    Model.__super__.set.apply(this, arguments);
+    if (typeof val === 'object') {
+      opts = val;
+    } else {
+      opts = options;
+    }
+    if (opts != null) {
+      autoSave = opts.autoSave;
+    }
+    if (autoSave) {
+      this.save(null, {
+        error: (function(_this) {
+          return function(model, response) {
+            return _this.publishEvent("!application:showAlert", {
+              type: 'error',
+              timeout: 5000,
+              text: response
+            });
+          };
+        })(this)
+      });
+    }
+    return this;
+  };
+
+  return Model;
+
+})(Chaplin.Model);
+});
+
+;require.register("models/setup/setup-model", function(exports, require, module) {
+var BaseModel, SetupModel, Utils,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+BaseModel = require('models/base/model');
+
+Utils = require('lib/utils');
+
+module.exports = SetupModel = (function(_super) {
+  __extends(SetupModel, _super);
+
+  function SetupModel() {
+    return SetupModel.__super__.constructor.apply(this, arguments);
+  }
+
+  SetupModel.prototype.idAttribute = '_id';
+
+  SetupModel.prototype.initialize = function(attrs, options) {};
+
+  SetupModel.prototype.url = function() {
+    return '/api/setup';
+  };
+
+  return SetupModel;
+
+})(BaseModel);
+});
+
+;require.register("routes", function(exports, require, module) {
+module.exports = function(match) {
+  match('', 'scan#index');
+  match('scan', 'scan#index');
+  return match('setup', 'setup#show');
+};
+});
+
+;require.register("views/alert-view", function(exports, require, module) {
+var AlertView, View,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+View = require('views/base/view');
+
+module.exports = AlertView = (function(_super) {
+  __extends(AlertView, _super);
+
+  AlertView.prototype.region = 'alerts';
+
+  AlertView.prototype.template = require('./templates/alert');
+
+  AlertView.prototype.autoRender = true;
+
+  function AlertView(options) {
+    if (options != null) {
+      _.extend(this, _.pick(options, ['messageData']));
+    }
+    AlertView.__super__.constructor.apply(this, arguments);
+  }
+
+  AlertView.prototype.render = function() {
+    AlertView.__super__.render.apply(this, arguments);
+    setTimeout((function(_this) {
+      return function() {
+        return _this.dispose();
+      };
+    })(this), 10000);
+    return this.$('.alert').on('closed.bs.alert', (function(_this) {
+      return function() {
+        return _this.dispose();
+      };
+    })(this));
+  };
+
+  AlertView.prototype.getTemplateData = function() {
+    return this.messageData;
+  };
+
+  AlertView.prototype.dispose = function() {
+    var prop, properties, _i, _len;
+    if (this.disposed) {
+      return;
+    }
+    properties = ['messageData'];
+    for (_i = 0, _len = properties.length; _i < _len; _i++) {
+      prop = properties[_i];
+      delete this[prop];
+    }
+    return AlertView.__super__.dispose.apply(this, arguments);
+  };
+
+  return AlertView;
+
+})(View);
+});
+
+;require.register("views/base/collection-view", function(exports, require, module) {
+var $, CollectionView, Utils, View, toggleElement,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+View = require('./view');
+
+Utils = require('lib/utils');
+
+$ = Backbone.$;
+
+toggleElement = (function() {
+  if ($) {
+    return function(elem, visible) {
+      return elem.toggle(visible);
+    };
+  } else {
+    return function(elem, visible) {
+      return elem.style.display = (visible ? '' : 'none');
+    };
+  }
+})();
+
+module.exports = CollectionView = (function(_super) {
+  __extends(CollectionView, _super);
+
+  CollectionView.prototype.getTemplateFunction = View.prototype.getTemplateFunction;
+
+  CollectionView.prototype.useCssAnimation = true;
+
+  CollectionView.prototype.animationStartClass = 'animated fadeIn';
+
+  CollectionView.prototype.animationEndClass = 'animated fadeIn';
+
+  CollectionView.prototype.renderAnimation = 'fadeIn';
+
+  CollectionView.prototype._rendered = false;
+
+  CollectionView.prototype.searchFieldSelector = null;
+
+  CollectionView.prototype.defaultFilterAttr = null;
+
+  CollectionView.prototype.defaultFilterValue = null;
+
+  function CollectionView(options) {
+    var onScreenResize;
+    if (options == null) {
+      options = {};
+    }
+    this.saveScrollInfo = __bind(this.saveScrollInfo, this);
+    this.filterFN = __bind(this.filterFN, this);
+    if (this.searchFieldSelector != null) {
+      this.events["keyup " + this.searchFieldSelector] = 'filterList';
+    }
+    if (this.renderAnimation != null) {
+      if (options.className != null) {
+        options.className = options.className + (" animated " + this.renderAnimation);
+      } else {
+        this.className = this.className + (" animated " + this.renderAnimation);
+      }
+    }
+    if (options.defaultFilterValue != null) {
+      this.defaultFilterValue = options.defaultFilterValue;
+    }
+    CollectionView.__super__.constructor.apply(this, arguments);
+    onScreenResize = this.onScreenResize;
+    this.onScreenResize = _.debounce((function(_this) {
+      return function() {
+        return onScreenResize.apply(_this, arguments);
+      };
+    })(this), 100);
+    $(window).on("resize.onScreenResize_" + this.cid, this.onScreenResize);
+    $(window).on("orientationchange.onScreenResize_" + this.cid, this.onScreenResize);
+  }
+
+  CollectionView.prototype.initialize = function() {
+    CollectionView.__super__.initialize.apply(this, arguments);
+    return this.loadLastParams();
+  };
+
+  CollectionView.prototype.loadLastParams = function() {
+    var id_, listViewID, _base, _ref, _ref1;
+    id_ = (_ref = this.collection) != null ? (_ref1 = _ref.tableParent) != null ? _ref1.id : void 0 : void 0;
+    listViewID = "" + this.className + "_" + id_;
+    this.currentParams = {};
+    (_base = this.currentParams).filterAttr || (_base.filterAttr = this.defaultFilterAttr || 'name');
+    if ((this.defaultFilterValue != null) && (this.currentParams.filterValue == null)) {
+      this.currentParams.filterValue = this.defaultFilterValue;
+    }
+    return this.orderByAttr(this.currentParams.filterAttr, this.currentParams.filterValue);
+  };
+
+  CollectionView.prototype.render = function() {
+    this._rendered = false;
+    CollectionView.__super__.render.apply(this, arguments);
+    this.adjustSearchField(this.currentParams.filterAttr, this.currentParams.filterValue);
+    this._rendered = true;
+    this.trigger('rendered');
+    return this;
+  };
+
+  CollectionView.prototype.attach = function() {
+    CollectionView.__super__.attach.apply(this, arguments);
+    this.adjustListHeight();
+    return this.adjustScrollPosition();
+  };
+
+  CollectionView.prototype.onScreenResize = function() {
+    return this.adjustListHeight();
+  };
+
+  CollectionView.prototype.adjustListHeight = function() {
+    var adjust_;
+    adjust_ = (function(_this) {
+      return function(containerIsModal) {
+        var calcHeight_;
+        if (containerIsModal == null) {
+          containerIsModal = false;
+        }
+        calcHeight_ = $(window).height() - _this.$(_this.listSelector).offset().top - 20;
+        if (calcHeight_ < 250) {
+          calcHeight_ = 250;
+        }
+        if (containerIsModal) {
+          calcHeight_ = calcHeight_ - 20;
+        }
+        return _this.$(_this.listSelector).height(calcHeight_);
+      };
+    })(this);
+    if (this.$('.modal').length > 0) {
+      if ($('.modal').attr('aria-hidden') === "false") {
+        return adjust_(true);
+      } else {
+        return this.$('.modal').on('shown.bs.modal', (function(_this) {
+          return function() {
+            return adjust_(true);
+          };
+        })(this));
+      }
+    } else {
+      return adjust_();
+    }
+  };
+
+  CollectionView.prototype.adjustScrollPosition = function() {
+    if (this.currentParams.scrollTop != null) {
+      return this.$(this.listSelector).scrollTop(this.currentParams.scrollTop);
+    }
+  };
+
+  CollectionView.prototype.adjustSearchField = function(fieldName, value) {
+    if (this.searchFieldSelector != null) {
+      return this.whenRendered().then((function(_this) {
+        return function() {
+          _this.$(_this.searchFieldSelector).val(value);
+          return _this.$(_this.searchFieldSelector).attr('placeholder', Utils.i18n_('c', 'search_by_term', {
+            term: Utils.i18n_('t', fieldName)
+          }));
+        };
+      })(this));
+    }
+  };
+
+  CollectionView.prototype.filterList = function(event, value) {
+    if (this.searchFieldSelector != null) {
+      if (value != null) {
+        this.$(this.searchFieldSelector).val(value);
+      } else {
+        value = this.$(this.searchFieldSelector).val();
+      }
+    }
+    if (value != null) {
+      this.filter((function(_this) {
+        return function(model) {
+          return _this.filterFN(model, value);
+        };
+      })(this));
+    }
+    return this.currentParams.filterValue = value;
+  };
+
+  CollectionView.prototype.filterFN = function(model, value) {
+    var value_;
+    value_ = model.get(this.currentParams.filterAttr);
+    if (value_ != null) {
+      return value_.toLowerCase().indexOf(value.toLowerCase()) > -1;
+    } else {
+      return false;
+    }
+  };
+
+  CollectionView.prototype.orderByAttr = function(attrName, filterValue) {
+    if (filterValue == null) {
+      filterValue = '';
+    }
+    return this.whenRendered().then((function(_this) {
+      return function() {
+        var comparatorAttr_;
+        _this.currentParams.filterAttr = attrName;
+        _this.currentParams.filterValue = filterValue;
+        comparatorAttr_ = _this.currentParams.filterAttr;
+        if (comparatorAttr_ === 'alias') {
+          comparatorAttr_ = 'aliasIntValue';
+        }
+        _this.collection.comparator = function(model) {
+          var value;
+          value = model.get(comparatorAttr_);
+          return value;
+        };
+        _this.adjustSearchField(_this.currentParams.filterAttr, _this.currentParams.filterValue);
+        _this.filterList(null, filterValue);
+        return _this.collection.sort();
+      };
+    })(this));
+  };
+
+  CollectionView.prototype.saveScrollInfo = function() {
+    return this.currentParams.scrollTop = this.$(this.listSelector).scrollTop();
+  };
+
+  CollectionView.prototype.filterCallback = function(view, included) {
+    if ($) {
+      view.$el.stop(true, true);
+    }
+    view.el.style.display = 'block';
+    return toggleElement(($ ? view.$el : view.el), included);
+  };
+
+  CollectionView.prototype.initItemView = function(model) {
+    if (this.itemView) {
+      return new this.itemView({
+        autoRender: false,
+        model: model,
+        saveScrollPosition: this.saveScrollInfo
+      });
+    } else {
+      throw new Error('The CollectionView#itemView property ' + 'must be defined or the initItemView() must be overridden.');
+    }
+  };
+
+  CollectionView.prototype.reattach = function() {
+    var subview, _i, _len, _ref;
+    this.attach();
+    this.delegateEvents();
+    _ref = this.subviews;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      subview = _ref[_i];
+      subview.reattach();
+    }
+    return this;
+  };
+
+  CollectionView.prototype.whenRendered = function() {
+    var deferred;
+    deferred = Q.defer();
+    if (this._rendered) {
+      deferred.resolve();
+    } else {
+      this.listenToOnce(this, 'rendered', function() {
+        return deferred.resolve();
+      });
+    }
+    return deferred.promise;
+  };
+
+  CollectionView.prototype.dispose = function() {
+    var prop, properties, _i, _len;
+    if (this.disposed) {
+      return;
+    }
+    $(window).off(".onScreenResize_" + this.cid);
+    properties = ['currentParams'];
+    for (_i = 0, _len = properties.length; _i < _len; _i++) {
+      prop = properties[_i];
+      delete this[prop];
+    }
+    return CollectionView.__super__.dispose.apply(this, arguments);
+  };
+
+  return CollectionView;
+
+})(Chaplin.CollectionView);
+});
+
+;require.register("views/base/view", function(exports, require, module) {
+var View,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+require('lib/view-helper');
+
+module.exports = View = (function(_super) {
+  __extends(View, _super);
+
+  View.prototype.optionNames = Chaplin.View.prototype.optionNames.concat(['template']);
+
+  View.prototype._rendered = false;
+
+  View.prototype.renderAnimation = 'fadeIn';
+
+  function View(options) {
+    if (options == null) {
+      options = {};
+    }
+    if (this.renderAnimation != null) {
+      if (options.className != null) {
+        options.className = options.className + (" animated " + this.renderAnimation);
+      } else {
+        this.className = this.className + (" animated " + this.renderAnimation);
+      }
+    }
+    View.__super__.constructor.apply(this, arguments);
+  }
+
+  View.prototype.getTemplateFunction = function() {
+    return this.template;
+  };
+
+  View.prototype.render = function() {
+    this._rendered = false;
+    View.__super__.render.apply(this, arguments);
+    this._rendered = true;
+    this.trigger('rendered');
+    return this;
+  };
+
+  View.prototype.reattach = function() {
+    var subview, _i, _len, _ref;
+    this.attach();
+    this.delegateEvents();
+    _ref = this.subviews;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      subview = _ref[_i];
+      subview.reattach();
+    }
+    return this;
+  };
+
+  View.prototype.attach = function() {
+    View.__super__.attach.apply(this, arguments);
+    if (this.model != null) {
+      if (typeof this.stickit === 'function') {
+        return this.stickit();
+      }
+    }
+  };
+
+  View.prototype.whenRendered = function() {
+    var deferred;
+    deferred = Q.defer();
+    if (this._rendered) {
+      deferred.resolve();
+    } else {
+      this.listenToOnce(this, 'rendered', function() {
+        return deferred.resolve();
+      });
+    }
+    return deferred.promise;
+  };
+
+  View.prototype.dispose = function() {
+    var prop, properties, _i, _len;
+    if (this.model != null) {
+      if (typeof this.stickit === 'function') {
+        this.unstickit();
+      }
+    }
+    properties = ['currentParams'];
+    for (_i = 0, _len = properties.length; _i < _len; _i++) {
+      prop = properties[_i];
+      delete this[prop];
+    }
+    return View.__super__.dispose.apply(this, arguments);
+  };
+
+  return View;
+
+})(Chaplin.View);
+});
+
+;require.register("views/home/header-view", function(exports, require, module) {
+var HeaderView, View,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+View = require('views/base/view');
+
+module.exports = HeaderView = (function(_super) {
+  __extends(HeaderView, _super);
+
+  function HeaderView() {
+    return HeaderView.__super__.constructor.apply(this, arguments);
+  }
+
+  HeaderView.prototype.autoRender = true;
+
+  HeaderView.prototype.container = '#header-container';
+
+  HeaderView.prototype.containerMethod = 'html';
+
+  HeaderView.prototype.template = require('./templates/header');
+
+  return HeaderView;
+
+})(View);
+});
+
+;require.register("views/home/templates/header", function(exports, require, module) {
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div class=\"container\"><div class=\"navbar-header\"><button type=\"button\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\" class=\"navbar-toggle collapsed\"><span class=\"sr-only\">"
+    + escapeExpression((helper = helpers.i18n_ || (depth0 && depth0.i18n_),options={hash:{},data:data},helper ? helper.call(depth0, "c", "toggle_navigation", options) : helperMissing.call(depth0, "i18n_", "c", "toggle_navigation", options)))
+    + "</span><span class=\"icon-bar\"></span><span class=\"icon-bar\"></span><span class=\"icon-bar\"></span></button><a href=\"/\" class=\"navbar-brand\"><img src=\"images/logo.png\" alt=\"logo\"/><span class=\"app-title\"><strong>Web&nbsp;</strong>Scanner</span></a></div><div id=\"navbar\" class=\"navbar-collapse collapse\"></div></div>";
+  return buffer;
+  });
+});
+
+require.register("views/scan/scan-view", function(exports, require, module) {
+var ScanView, Scanner, Utils, View,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+View = require('views/base/view');
+
+Utils = require('lib/utils');
+
+Scanner = require('lib/scanner');
+
+module.exports = ScanView = (function(_super) {
+  __extends(ScanView, _super);
+
+  function ScanView() {
+    this.saveImage = __bind(this.saveImage, this);
+    this.showPreview = __bind(this.showPreview, this);
+    return ScanView.__super__.constructor.apply(this, arguments);
+  }
+
+  ScanView.prototype.autoRender = true;
+
+  ScanView.prototype.className = 'scan-page';
+
+  ScanView.prototype.template = require('./templates/scan-page');
+
+  ScanView.prototype.events = {
+    'click #previewButton': 'preview',
+    'click #scanButton': 'scan'
+  };
+
+  ScanView.prototype.render = function() {
+    return ScanView.__super__.render.apply(this, arguments);
+  };
+
+  ScanView.prototype.preview = function() {
+    return Scanner.preview().then((function(_this) {
+      return function(previewImage) {
+        return _this.showPreview(previewImage);
+      };
+    })(this));
+  };
+
+  ScanView.prototype.scan = function() {
+    var options;
+    options = {};
+    options.fileName = this.$('input#filename').val();
+    return Scanner.scan(options).then((function(_this) {
+      return function() {
+        return _this.publishEvent("!application:showAlert", {
+          type: 'information',
+          text: 'Image scanned successfully!'
+        });
+      };
+    })(this))["catch"]((function(_this) {
+      return function(err) {
+        console.error(err);
+        return _this.publishEvent("!application:showAlert", {
+          type: 'error',
+          text: err
+        });
+      };
+    })(this));
+  };
+
+  ScanView.prototype.showPreview = function(scannedImageRes) {
+    return this.$('img.scanned-img').attr('src', scannedImageRes);
+  };
+
+  ScanView.prototype.saveImage = function(scannedImage) {
+    return window.location.assign(scannedImage);
+  };
+
+  return ScanView;
+
+})(View);
+});
+
+;require.register("views/scan/templates/scan-page", function(exports, require, module) {
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div class=\"row scan-actions\"><div class=\"col-md-8 col-md-offset-2\"><div class=\"row\"><div class=\"col-md-8\"><div class=\"form-horizontal\"><div class=\"form-group\"><label for=\"baseRepoPath\" class=\"col-sm-4 control-label\">"
+    + escapeExpression((helper = helpers.i18n_ || (depth0 && depth0.i18n_),options={hash:{},data:data},helper ? helper.call(depth0, "c", "file_name", options) : helperMissing.call(depth0, "i18n_", "c", "file_name", options)))
+    + "</label><div class=\"col-sm-8\"><input id=\"filename\" type=\"text\" placeholder=\"file name for save\" value=\"filename.jpg\" class=\"form-control\"/></div></div></div></div><div class=\"col-md-4\"><button id=\"scanButton\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">"
+    + escapeExpression((helper = helpers.i18n_ || (depth0 && depth0.i18n_),options={hash:{},data:data},helper ? helper.call(depth0, "c", "scan_and_save", options) : helperMissing.call(depth0, "i18n_", "c", "scan_and_save", options)))
+    + "</button><button id=\"previewButton\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">"
+    + escapeExpression((helper = helpers.i18n_ || (depth0 && depth0.i18n_),options={hash:{},data:data},helper ? helper.call(depth0, "c", "preview", options) : helperMissing.call(depth0, "i18n_", "c", "preview", options)))
+    + "</button></div></div></div></div><div class=\"row\"><div class=\"col-md-8 col-md-offset-2\"><div class=\"panel panel-default\"><div class=\"panel-heading text-center\">"
+    + escapeExpression((helper = helpers.i18n_ || (depth0 && depth0.i18n_),options={hash:{},data:data},helper ? helper.call(depth0, "c", "image_preview", options) : helperMissing.call(depth0, "i18n_", "c", "image_preview", options)))
+    + "</div><div class=\"panel-body\"><img class=\"scanned-img\"/></div></div></div></div>";
+  return buffer;
+  });
+});
+
+require.register("views/setup/setup-view", function(exports, require, module) {
+var SetupView, Utils, View,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+View = require('views/base/view');
+
+Utils = require('lib/utils');
+
+module.exports = SetupView = (function(_super) {
+  __extends(SetupView, _super);
+
+  function SetupView() {
+    return SetupView.__super__.constructor.apply(this, arguments);
+  }
+
+  SetupView.prototype.autoRender = true;
+
+  SetupView.prototype.className = 'setup-page';
+
+  SetupView.prototype.template = require('./templates/setup');
+
+  SetupView.prototype.bindings = {
+    '#baseRepoPath': 'base_repo_path'
+  };
+
+  SetupView.prototype.events = {
+    'click #saveButton': "saveSetup"
+  };
+
+  SetupView.prototype.saveSetup = function() {
+    var opts;
+    opts = {
+      success: (function(_this) {
+        return function() {
+          console.log("save setup success!");
+          return Chaplin.utils.redirectTo({
+            url: '/'
+          });
+        };
+      })(this),
+      error: (function(_this) {
+        return function(model, response) {
+          return _this.publishEvent("!application:showAlert", {
+            type: 'error',
+            text: Utils.i18n_('c', 'setup:invalid_setup_msg')
+          });
+        };
+      })(this)
+    };
+    return this.model.save(null, opts);
+  };
+
+  return SetupView;
+
+})(View);
+});
+
+;require.register("views/setup/templates/setup", function(exports, require, module) {
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
+
+
+  buffer += "<div class=\"page-title\"><h4>"
+    + escapeExpression((helper = helpers.i18n_ || (depth0 && depth0.i18n_),options={hash:{},data:data},helper ? helper.call(depth0, "c", "setup:editor_setup", options) : helperMissing.call(depth0, "i18n_", "c", "setup:editor_setup", options)))
+    + "</h4></div><div class=\"row\"><div class=\"col-md-8 col-md-offset-2\"><div class=\"panel panel-default\"><div class=\"panel-body\"><div class=\"form-horizontal\"><div class=\"form-group\"><label for=\"baseRepoPath\" class=\"col-sm-4 control-label\">"
+    + escapeExpression((helper = helpers.i18n_ || (depth0 && depth0.i18n_),options={hash:{},data:data},helper ? helper.call(depth0, "c", "setup:base_files_repo_path", options) : helperMissing.call(depth0, "i18n_", "c", "setup:base_files_repo_path", options)))
+    + "</label><div class=\"col-sm-8\"><input id=\"baseRepoPath\" type=\"text\" placeholder=\"path\" value=\"";
+  if (helper = helpers.base_repo_path) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.base_repo_path); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-attr=\"base_repo_path\" class=\"form-control\"/></div></div></div></div><div class=\"panel-footer\"><div class=\"row\"><div class=\"col-xs-12\"><div class=\"pull-right\"><button id=\"saveButton\" type=\"button\" class=\"btn btn-primary\">"
+    + escapeExpression((helper = helpers.i18n_ || (depth0 && depth0.i18n_),options={hash:{},data:data},helper ? helper.call(depth0, "c", "save", options) : helperMissing.call(depth0, "i18n_", "c", "save", options)))
+    + "</button></div></div></div></div></div></div></div>";
+  return buffer;
+  });
+});
+
+require.register("views/site-view", function(exports, require, module) {
+var SiteView, View,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+View = require('views/base/view');
+
+module.exports = SiteView = (function(_super) {
+  __extends(SiteView, _super);
+
+  function SiteView() {
+    return SiteView.__super__.constructor.apply(this, arguments);
+  }
+
+  SiteView.prototype.container = 'body';
+
+  SiteView.prototype.id = 'site-container';
+
+  SiteView.prototype.regions = {
+    header: '#header-container',
+    main: '#page-container',
+    alerts: '.alert-container'
+  };
+
+  SiteView.prototype.template = require('./templates/site');
+
+  return SiteView;
+
+})(View);
+});
+
+;require.register("views/templates/alert", function(exports, require, module) {
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div role=\"alert\" class=\"alert alert-dismissible alert-";
+  if (helper = helpers.level) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.level); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"><button type=\"button\" data-dismiss=\"alert\" aria-label=\"Close\" class=\"close\"><span aria-hidden=\"true\">&times;</span></button><strong>";
+  if (helper = helpers.title) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.title); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</strong> ";
+  if (helper = helpers.message) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.message); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</div>";
+  return buffer;
+  });
+});
+
+require.register("views/templates/backbutton", function(exports, require, module) {
+module.exports = function anonymous(locals, attrs, escape, rethrow, merge
+/**/) {
+attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<a href="javascript:window.history.back()" class="text-left">{{i18n_ \'c\' \'back\'}}</a>');
+}
+return buf.join("");
+};
+});
+
+require.register("views/templates/site", function(exports, require, module) {
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<header id=\"header-container\" class=\"navbar navbar-inverse navbar-fixed-top\"></header><div class=\"container\"><div id=\"page-container\"></div></div>";
+  });
+});
+
+
+//# sourceMappingURL=app.js.map

@@ -26,27 +26,25 @@ module.exports = class Controller extends Chaplin.Controller
 
     @reuse 'site', SiteView
 
+  #checkSetup: ->
 
+    #deferred = Q.defer()
 
-  checkSetup: ->
+    #$.ajax
+      #type: 'GET'
+      #url: '/api/setup/is_configured'
+      #dataType: "json"
+      #success: ->
+        #deferred.resolve()
+      #error: (err)=>
+        #@publishEvent "!application:showAlert",
+          #type: 'information'
+          #text: 'Configuración necesaria'
 
-    deferred = Q.defer()
+        #Chaplin.utils.redirectTo
+          #controller: 'setup'
+          #action: 'show'
 
-    $.ajax
-      type: 'GET'
-      url: '/api/setup/is_configured'
-      dataType: "json"
-      success: ->
-        deferred.resolve()
-      error: (err)=>
-        @publishEvent "!application:showAlert",
-          type: 'information'
-          text: 'Configuración necesaria'
+        #deferred.reject()
 
-        Chaplin.utils.redirectTo
-          controller: 'setup'
-          action: 'show'
-
-        deferred.reject()
-
-    deferred.promise
+    #deferred.promise

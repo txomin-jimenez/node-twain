@@ -88,6 +88,4 @@ _.extend utils,
 # Prevent creating new properties and stuff.
 Object.seal? utils
 
-window.trazautils = utils
-
 module.exports = utils

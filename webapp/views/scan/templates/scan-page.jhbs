@@ -9,6 +9,7 @@
               input#filename.form-control(type='text', placeholder='file name for save', value='filename.jpg')
       .col-md-4
         button#scanButton.btn.btn-primary.btn-lg.btn-block(type='button') {{i18n_ 'c' 'scan_and_save'}}
+        button#previewButton.btn.btn-primary.btn-lg.btn-block(type='button') {{i18n_ 'c' 'preview'}}
 .row
   .col-md-8.col-md-offset-2
     .panel.panel-default

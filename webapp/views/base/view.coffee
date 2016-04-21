@@ -18,9 +18,9 @@ module.exports = class View extends Chaplin.View
 
     super
 
-    if @className?
-      window.savedPageStatus[@className] ||= {}
-      @currentParams = window.savedPageStatus[@className]
+    #if @className?
+      #window.savedPageStatus[@className] ||= {}
+      #@currentParams = window.savedPageStatus[@className]
 
   # Precompiled templates function initializer.
   getTemplateFunction: ->

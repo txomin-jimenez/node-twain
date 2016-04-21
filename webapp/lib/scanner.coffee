@@ -1,7 +1,11 @@
 
 
 module.exports =
-
+    
+  ###*
+    Request scan preview 
+  @method preview
+  ###
   preview: ->
 
     deferred = Q.defer()
@@ -10,9 +14,9 @@ module.exports =
 
     xhr.onreadystatechange = ->
       if this.readyState is 4
-        if this.status == 200
-          url = window.URL or window.webkitURL;
-          imageUrl = url.createObjectURL(this.response);
+        if this.status >= 200 and this.status < 300
+          url = window.URL or window.webkitURL
+          imageUrl = url.createObjectURL(this.response)
 
           deferred.resolve(imageUrl)
         else
@@ -25,6 +29,14 @@ module.exports =
 
     deferred.promise
 
-  scan: (options) ->
+  ###*
+    Request scan and send image download
+  @method scan
+  ###
+  scan: (options={}) ->
 
-    window.location.assign "/api/scan"
+    if options.fileName?
+      window.location.assign "/api/scan?fileName=#{options.fileName}"
+    else
+      window.location.assign "/api/scan"
+    Q()

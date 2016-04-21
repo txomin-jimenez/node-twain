@@ -70,8 +70,9 @@ module.exports = class CollectionView extends Chaplin.CollectionView
     id_ = @collection?.tableParent?.id
     listViewID = "#{@className}_#{id_}"
 
-    window.savedPageStatus[listViewID] ||= {}
-    @currentParams = window.savedPageStatus[listViewID]
+    #window.savedPageStatus[listViewID] ||= {}
+    #@currentParams = window.savedPageStatus[listViewID]
+    @currentParams = {}
 
     @currentParams.filterAttr ||= @defaultFilterAttr or 'name'
 
