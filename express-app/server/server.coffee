@@ -5,6 +5,8 @@ config                = require('../../brunch-config').config
 path                  = require 'path'
 cors                  = require 'cors'
 bodyParser            = require 'body-parser'
+cookieParser          = require 'cookie-parser'
+methodOverride        = require 'method-override'
 
 devErrorHandler       = require './dev-error-handler'
 errorHandler          = require './error-handler'
@@ -21,22 +23,22 @@ app.set "port", config.server.port
 app.set "views", __dirname + "/../views"
 app.set "view engine", "jade"
 app.use express.logger("dev")
-app.use express.cookieParser()
-app.use express.bodyParser()
-app.use express.methodOverride()
+app.use cookieParser()
+app.use bodyParser.urlencoded({extended: true})
+app.use bodyParser.json()
+app.use methodOverride()
 app.use express.static(path.join(__dirname, "../../www"))
 app.use app.router
 
-app.use bodyParser.json()
+# app.use bodyParser.json()
 
 # dev
 if app.get("env") is "development"
-  console.log "development"
   app.use express.errorHandler()
 
 # prod
-if app.get("env") is "production"
-  console.log "production"
+# if app.get("env") is "production"
+#   console.log "production server"
 
 # # inicializar modulos
 
@@ -51,6 +53,9 @@ for moduleName in [
 
 # start server
 app.listen app.get("port")
+console.log("**********************************************")
+console.log(app.get("env") + " server listening on port " + app.get("port"))
+console.log("**********************************************")
 
 # catch 404 and forward to error handler
 app.use routeNotFound
